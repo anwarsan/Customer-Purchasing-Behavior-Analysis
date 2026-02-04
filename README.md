@@ -45,4 +45,26 @@ Exploratory analysis and visualization were conducted to:
 
 ---
 
-## 💡 Key Insi
+## 💡 Key Insights
+- A small customer segment contributes disproportionately to revenue
+- Purchasing behavior varies significantly across product categories
+- Repeat customers show distinct patterns from one-time buyers
+
+---
+
+## 🎯 Business Recommendations
+- Prioritize high-value and loyal customer segments
+- Personalize promotions based on purchasing patterns
+- Use insights to guide inventory and campaign planning
+
+---
+
+## 🧪 Tools & Technologies
+Python, Pandas, NumPy, Matplotlib, Seaborn, Statsmodel, Scikit-learn
+
+---
+
+## 📄 Deliverables
+- Behavioral analysis notebook
+- Insight-driven visualizations
+- Marketing-focused recommendations
