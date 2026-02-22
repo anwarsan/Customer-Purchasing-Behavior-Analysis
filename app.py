@@ -57,7 +57,7 @@ with row1_col1:
         x='Count', 
         y='Segment', 
         orientation='h',
-        color='Segment',
+        #color='Segment',
         title="Jumlah Pelanggan per Segmen",
         template="plotly_white"
     )
