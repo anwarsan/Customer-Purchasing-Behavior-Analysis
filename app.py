@@ -10,7 +10,7 @@ st.title("📊 E-Commerce RFM Analysis Dashboard")
 # Load Data
 @st.cache_data
 def load_data():
-    df = pd.read_csv('RFM.xlsx - RFM.csv')
+    df = pd.read_csv('RFM.csv')
     return df
 
 df_rfm = load_data()
