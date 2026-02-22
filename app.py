@@ -1,45 +1,83 @@
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
+import plotly.express as px
 
-st.set_page_config(page_title="E-Commerce RFM Dashboard", layout="wide")
+# Konfigurasi Halaman
+st.set_page_config(page_title="Interactive RFM Dashboard", layout="wide")
 
-st.title("📊 E-Commerce RFM Analysis Dashboard")
+st.title("🚀 Interactive E-Commerce RFM Dashboard")
+st.markdown("Dashboard ini memungkinkan Anda untuk mengeksplorasi segmen pelanggan secara interaktif.")
 
 # Load Data
 @st.cache_data
 def load_data():
+    # Pastikan file CSV berada di folder yang sama
     df = pd.read_csv('RFM.csv')
     return df
 
 df_rfm = load_data()
 
-# Sidebar Filter
-st.sidebar.header("Filter")
-segment = st.sidebar.multiselect("Pilih Segmen:", 
-                                options=df_rfm["customers_segment"].unique(),
-                                default=df_rfm["customers_segment"].unique())
+# --- SIDEBAR FILTER ---
+st.sidebar.header("User Filter")
+segments = st.sidebar.multiselect(
+    "Pilih Segmen Pelanggan:",
+    options=df_rfm["customers_segment"].unique(),
+    default=df_rfm["customers_segment"].unique()
+)
 
-df_selection = df_rfm[df_rfm["customers_segment"].isin(segment)]
+# Filter Dataframe berdasarkan input sidebar
+df_selection = df_rfm[df_rfm["customers_segment"].isin(segments)]
 
-# KPI Metrics
+# --- MAIN PAGE: KPI ---
+total_cust = len(df_selection)
+avg_monetary = df_selection['Monetary'].mean()
+avg_freq = df_selection['Frequency'].mean()
+
 col1, col2, col3 = st.columns(3)
-col1.metric("Total Customers", f"{len(df_selection):,}")
-col2.metric("Avg Frequency", f"{df_selection['Frequency'].mean():.2f}")
-col3.metric("Total Monetary", f"{df_selection['Monetary'].sum():.2f}")
+with col1:
+    st.metric("Total Pelanggan", f"{total_cust:,}")
+with col2:
+    st.metric("Rata-rata Transaksi (Monetary)", f"{avg_monetary:.2f}")
+with col3:
+    st.metric("Rata-rata Frekuensi", f"{avg_freq:.2f}")
 
-# Visualisasi
-left_column, right_column = st.columns(2)
+st.divider()
 
-with left_column:
-    st.subheader("Distribusi Segmen Pelanggan")
-    fig, ax = plt.subplots()
-    sns.countplot(data=df_selection, y='customers_segment', ax=ax, palette='viridis')
-    st.pyplot(fig)
+# --- VISUALISASI PLOTLY ---
+row1_col1, row1_col2 = st.columns(2)
 
-with right_column:
-    st.subheader("Recency vs Frequency")
-    fig, ax = plt.subplots()
-    sns.scatterplot(data=df_selection, x='Recency', y='Frequency', hue='customers_segment', ax=ax)
-    st.pyplot(fig)
+with row1_col1:
+    st.subheader("Distribusi Segmen (Bar Chart)")
+    # Menghitung jumlah per segmen
+    segment_counts = df_selection['customers_segment'].value_counts().reset_index()
+    segment_counts.columns = ['Segment', 'Count']
+    
+    fig_bar = px.bar(
+        segment_counts, 
+        x='Count', 
+        y='Segment', 
+        orientation='h',
+        color='Segment',
+        title="Jumlah Pelanggan per Segmen",
+        template="plotly_white"
+    )
+    st.plotly_chart(fig_bar, use_container_width=True)
+
+with row1_col2:
+    st.subheader("Recency vs Frequency Analysis")
+    fig_scatter = px.scatter(
+        df_selection,
+        x="Recency",
+        y="Frequency",
+        color="customers_segment",
+        size="Monetary",
+        hover_name="user_id",
+        log_y=True, # Menggunakan skala log jika data frequency sangat kontras
+        title="Hubungan Recency, Frequency, & Monetary",
+        template="plotly_dark"
+    )
+    st.plotly_chart(fig_scatter, use_container_width=True)
+
+# --- TABEL DATA ---
+with st.expander("Lihat Detail Data Mentah"):
+    st.dataframe(df_selection)
