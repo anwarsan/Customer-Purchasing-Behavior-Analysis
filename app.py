@@ -6,7 +6,7 @@ import plotly.express as px
 st.set_page_config(page_title="Interactive RFM Dashboard", layout="wide")
 
 st.title("🚀 Interactive E-Commerce RFM Dashboard")
-st.markdown("Dashboard ini memungkinkan Anda untuk mengeksplorasi segmen pelanggan secara interaktif.")
+st.markdown("Dashboard ini memungkinkan kita untuk mengeksplorasi segmen pelanggan secara interaktif.")
 
 # Load Data
 @st.cache_data
@@ -58,9 +58,11 @@ with row1_col1:
         y='Segment', 
         orientation='h',
         color='Segment',
-        title="Jumlah Pelanggan per Segmen",
+        title="Jumlah Customer per Segmen",
         template="plotly_white"
     )
+    # --- BAGIAN PENTING: Menghapus Legend ---
+    fig_bar.update_layout(showlegend=False)
     st.plotly_chart(fig_bar, use_container_width=True)
 
 with row1_col2:
@@ -81,3 +83,26 @@ with row1_col2:
 # --- TABEL DATA ---
 with st.expander("Lihat Detail Data Mentah"):
     st.dataframe(df_selection)
+
+st.divider()
+st.header("📌 Analisis Strategis")
+
+# Menggunakan expander agar dashboard tetap ringkas
+with st.expander("Klik untuk melihat Insight & Rekomendasi Strategis", expanded=True):
+    col_ins, col_rec = st.columns(2)
+    
+    with col_ins:
+        st.markdown("### 💡 Insight Utama")
+        st.write("""
+        * **Dominasi Big Spenders:** Segmen ini memiliki populasi besar, menunjukkan bahwa platform berhasil menarik pengguna dengan daya beli tinggi.
+        * **Retensi Loyalitas:** Sekitar 45% pelanggan adalah *repeat buyers*. Ini adalah aset berharga yang perlu dijaga agar tidak berpindah ke kompetitor.
+        * **Kesenjangan Konversi:** Meskipun traffic tinggi, CVR rata-rata masih di angka 0.9%, menunjukkan adanya hambatan (*friction*) saat proses checkout.
+        """)
+
+    with col_rec:
+        st.markdown("### 🎯 Rekomendasi & Fokus Strategis")
+        st.write("""
+        * **Program Loyalitas (Tiered):** Fokuskan pada segmen *Best Customers* dengan akses eksklusif atau sistem poin untuk meningkatkan *switching cost*.
+        * **Win-back Campaign:** Segmen *Almost Lost* harus diprioritaskan dengan promo berbasis urgensi (diskon dengan batas waktu) untuk memicu transaksi kembali.
+        * **Optimasi Checkout:** Perbaiki pengalaman halaman pembayaran dan tawarkan voucher gratis ongkir, yang terbukti menjadi faktor penentu utama transaksi.
+        """)
