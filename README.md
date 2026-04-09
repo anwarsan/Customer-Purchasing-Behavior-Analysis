@@ -33,3 +33,4 @@ Behavioral insights to improve conversion and transaction value
 - Behavioral analysis notebooks
 - Customer segmentation insights
 - Strategic marketing recommendations
+- Model deployment 👉🏻 data viz: https://rfm-segment.streamlit.app
